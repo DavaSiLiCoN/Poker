@@ -4,14 +4,19 @@ import treys
 import tqdm
 
 def main():
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         num_players = int(sys.argv[1])
+        loop_len = int(sys.argv[2])
+    elif len(sys.argv) > 1:
+        num_players = int(sys.argv[1])
+        loop_len = 50_000
     else:
         num_players = 2
     
     game = Game(num_players)
     result = {}
-    for _ in tqdm.tqdm(range(100_000),colour="red"):
+    for _ in tqdm.tqdm(range(loop_len),colour="red"):
+        game.reset()
         game.run_game()
 
         min_eval = float("inf")
@@ -22,11 +27,9 @@ def main():
                 min_eval = eval
                 winner_id = i
         
-        game.reset()
 
         for player in range(num_players):
             key_name = create_dict_key(game.player_hands[player])
-
             try:
                 result[key_name][1] += 1
             except KeyError:
